@@ -72,9 +72,15 @@ def parse_eligibility_response(json_data):
            "data" in json_data[1]["result"] and "json" in json_data[1]["result"]["data"] and \
            "eligibilityData" in json_data[1]["result"]["data"]["json"]:
             eligibility_data = json_data[1]["result"]["data"]["json"]["eligibilityData"]
-            if "CALDERA_USERS" in eligibility_data:
-                amount = float(eligibility_data["CALDERA_USERS"])
-                is_eligible = amount > 0
+            values = []
+            for v in eligibility_data.values():
+                try:
+                    val = float(v)
+                    values.append(val)
+                except (ValueError, TypeError):
+                    continue
+            amount = sum(values)
+            is_eligible = any(val > 0 for val in values)
     except (KeyError, TypeError, ValueError):
         pass
     return is_eligible, amount
