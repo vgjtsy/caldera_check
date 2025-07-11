@@ -1,0 +1,3 @@
+http://user:pass@ip:port
+или
+user:pass@ip:port
